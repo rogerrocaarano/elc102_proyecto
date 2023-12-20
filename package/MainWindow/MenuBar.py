@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QMenuBar
 from PySide6.QtGui import QAction
 
-from package.controllers.MainWindowController import MainWindowController as Controller
+from package.MainWindow.MainWindowController import MainWindowController as Controller
 
 
 class MenuBar(QMenuBar):

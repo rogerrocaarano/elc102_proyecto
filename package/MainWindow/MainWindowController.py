@@ -1,4 +1,4 @@
-from package.views.components.StatusBar import StatusBar
+from package.MainWindow import StatusBar
 
 
 class MainWindowController:

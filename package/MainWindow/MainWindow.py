@@ -2,11 +2,11 @@ from PySide6.QtWidgets import QMainWindow
 from PySide6.QtCore import QEvent
 from icecream import ic
 
-from package.views.components.Canvas import Canvas
-from package.views.components.MenuBar import MenuBar
-from package.views.components.StatusBar import StatusBar
+from package.Canvas.Canvas import Canvas
+from package.MainWindow.MenuBar import MenuBar
+from package.MainWindow.StatusBar import StatusBar
 
-from package.controllers.MainWindowController import MainWindowController
+from package.MainWindow.MainWindowController import MainWindowController
 
 import package.globals as gl
 

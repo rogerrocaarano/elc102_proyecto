@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QLabel
 from PySide6.QtGui import QPixmap, QColor
 from icecream import ic
 
-from package.controllers.MainWindowController import MainWindowController
+from package.MainWindow.MainWindowController import MainWindowController
 import package.globals as gl
 
 
