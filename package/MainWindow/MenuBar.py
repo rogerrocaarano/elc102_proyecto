@@ -17,11 +17,11 @@ class MenuBar(QMenuBar):
         canvas_menu.addAction(clear_action)
 
         change_bg_color_action = QAction("Cambiar color de fondo", self)
-        # TODO: Implement change_bg_color_action
+        change_bg_color_action.triggered.connect(self.draw_events.change_bg_color_action_triggered)
         canvas_menu.addAction(change_bg_color_action)
 
         change_brush_color_action = QAction("Cambiar color del pincel", self)
-        # TODO: Implement change_brush_color_action
+        change_brush_color_action.triggered.connect(self.draw_events.change_brush_color_action_triggered)
         canvas_menu.addAction(change_brush_color_action)
 
         # Draw menu

@@ -14,7 +14,6 @@ class MainWindow(QMainWindow):
         self.menu_bar = MenuBar(self.draw_events)
         self.status_bar = StatusBar()
 
-
         # Create window
         self.setWindowTitle("Proyecto ELC102")
         self.setStatusBar(self.status_bar)

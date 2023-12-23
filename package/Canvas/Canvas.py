@@ -14,6 +14,7 @@ class Canvas(QLabel):
         self.pixmap = QPixmap(width, height)
         self.drawed_objects = []
         self.bg_color = color
+        self.draw_color = QColor("white")
 
         self.pixmap.fill(self.bg_color)
         self.setPixmap(self.pixmap)
@@ -27,7 +28,7 @@ class Canvas(QLabel):
         self.pixmap.fill(QColor("black"))
         self.setPixmap(self.pixmap)
 
-    def draw_polygon(self, polygon: QPolygonF, color=QColor("white")):
+    def draw_polygon(self, polygon: QPolygonF):
         """
         Draw a polygon on the canvas
         :param polygon: Polygon to be drawn
@@ -35,11 +36,11 @@ class Canvas(QLabel):
         :return:
         """
         painter = QPainter(self.pixmap)
-        painter.setPen(color)
+        painter.setPen(self.draw_color)
         painter.drawPolygon(polygon)
         self.setPixmap(self.pixmap)
 
-    def draw_line(self, point_a: QPointF, point_b: QPointF, color=QColor("white")):
+    def draw_line(self, point_a: QPointF, point_b: QPointF):
         """
         Draw a line on the canvas
         :param point_a: Point A
@@ -49,7 +50,7 @@ class Canvas(QLabel):
         """
         line = QLineF(point_a, point_b)
         painter = QPainter(self.pixmap)
-        painter.setPen(color)
+        painter.setPen(self.draw_color)
         painter.drawLine(line)
         self.setPixmap(self.pixmap)
 

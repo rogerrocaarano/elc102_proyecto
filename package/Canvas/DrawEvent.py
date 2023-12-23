@@ -1,3 +1,5 @@
+from PySide6.QtWidgets import QColorDialog
+
 from package.Geometry.Polygon import Polygon
 from package.Geometry.Rectangle import Rectangle
 from package.Geometry.Square import Square
@@ -17,6 +19,24 @@ class DrawEvent:
         :return:
         """
         self.canvas.clear()
+
+    def change_bg_color_action_triggered(self):
+        """
+        Triggered when the user clicks on the change background color action
+        :return:
+        """
+        color = QColorDialog.getColor()
+        if color.isValid():
+            self.canvas.bg_color = color
+
+    def change_brush_color_action_triggered(self):
+        """
+        Triggered when the user clicks on the change brush color action
+        :return:
+        """
+        color = QColorDialog.getColor()
+        if color.isValid():
+            self.canvas.draw_color = color
 
     def draw_line_action_triggered(self):
         """
