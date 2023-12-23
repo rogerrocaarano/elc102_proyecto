@@ -1,5 +1,3 @@
-from PySide6.QtGui import QPolygonF
-
 from package.Geometry.Polygon import Polygon
 from package.Geometry.Rectangle import Rectangle
 from package.Geometry.Square import Square
@@ -7,10 +5,18 @@ from package.Geometry.Triangle import Triangle
 
 
 class DrawEvent:
-    def __init__(self):
+    def __init__(self, canvas):
+        self.canvas = canvas
         self.drawing = None
         self.initial_point = None
         self.points = []
+
+    def clear_action_triggered(self):
+        """
+        Triggered when the user clicks on the clear action
+        :return:
+        """
+        self.canvas.clear()
 
     def draw_line_action_triggered(self):
         """

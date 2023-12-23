@@ -9,11 +9,11 @@ from package.MainWindow.StatusBar import StatusBar
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.draw_events = DrawEvent()
-        # Window widgets
+        self.canvas = Canvas(self, 1280, 720)
+        self.draw_events = DrawEvent(self.canvas)
         self.menu_bar = MenuBar(self.draw_events)
         self.status_bar = StatusBar()
-        self.canvas = Canvas(self, 1280, 720)
+
 
         # Create window
         self.setWindowTitle("Proyecto ELC102")
