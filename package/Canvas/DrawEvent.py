@@ -13,20 +13,10 @@ class DrawEvent:
         self.points = []
 
     def draw_line_action_triggered(self):
-        """
-        This method is called when the user clicks on the "Draw line" action in the menu bar.
-        :return:
-        """
         self.drawing = "line"
         self.initial_point = None
 
     def draw_line_event(self, canvas, ev):
-        """
-        This method is called when the user clicks on the canvas while the "Draw line" action is active.
-        :param canvas:
-        :param ev:
-        :return:
-        """
         if self.initial_point is None:
             self.initial_point = ev.pos()
         else:
@@ -35,20 +25,10 @@ class DrawEvent:
             self.drawing = None
 
     def draw_square_action_triggered(self):
-        """
-        This method is called when the user clicks on the "Draw square" action in the menu bar.
-        :return:
-        """
         self.drawing = "square"
         self.initial_point = None
 
     def draw_square_event(self, canvas, ev):
-        """
-        This method is called when the user clicks on the canvas while the "Draw square" action is active.
-        :param canvas:
-        :param ev:
-        :return:
-        """
         if self.initial_point is None:
             self.initial_point = ev.pos()
         else:
@@ -58,20 +38,10 @@ class DrawEvent:
             self.drawing = None
 
     def draw_rectangle_action_triggered(self):
-        """
-        This method is called when the user clicks on the "Draw rectangle" action in the menu bar.
-        :return:
-        """
         self.drawing = "rectangle"
         self.initial_point = None
 
     def draw_rectangle_event(self, canvas, ev):
-        """
-        This method is called when the user clicks on the canvas while the "Draw rectangle" action is active.
-        :param canvas:
-        :param ev:
-        :return:
-        """
         if self.initial_point is None:
             self.initial_point = ev.pos()
         else:
@@ -81,18 +51,10 @@ class DrawEvent:
             self.drawing = None
 
     def draw_triangle_action_triggered(self):
-        """
-        This method is called when the user clicks on the "Draw triangle" action in the menu bar.
-        :return:
-        """
         self.drawing = "triangle"
         self.initial_point = None
 
     def draw_triangle_event(self, canvas, ev):
-        """
-
-        :return:
-        """
         if not self.points:
             self.points.append(ev.pos())
         elif len(self.points) < 2:
@@ -104,10 +66,6 @@ class DrawEvent:
             self.points = []
 
     def draw_polygon_action_triggered(self):
-        """
-        This method is called when the user clicks on the "Draw polygon" action in the menu bar.
-        :return:
-        """
         self.drawing = "polygon"
         self.initial_point = None
 
