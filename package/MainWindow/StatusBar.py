@@ -5,9 +5,8 @@ from icecream import ic
 
 
 class StatusBar(QStatusBar):
-    def __init__(self, controller):
+    def __init__(self):
         super().__init__()
-        self.controller = controller
         self.widgets = {
             "pos_x": QLabel("X"),
             "pos_y": QLabel("Y")

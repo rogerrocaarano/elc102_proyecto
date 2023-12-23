@@ -1,30 +1,26 @@
 from PySide6.QtWidgets import QMainWindow
-from PySide6.QtCore import QEvent
-from icecream import ic
 
 from package.Canvas.Canvas import Canvas
+from package.Canvas.DrawEvent import DrawEvent
 from package.MainWindow.MenuBar import MenuBar
 from package.MainWindow.StatusBar import StatusBar
 
-from package.MainWindow.MainWindowController import MainWindowController
-
-import package.globals as gl
-
-debug = True
-
 
 class MainWindow(QMainWindow):
-
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.draw_events = DrawEvent()
+        # Window widgets
+        self.menu_bar = MenuBar(self.draw_events)
+        self.status_bar = StatusBar()
+        self.canvas = Canvas(self, 1280, 720)
+
+        # Create window
         self.setWindowTitle("Proyecto ELC102")
-        self.controller = MainWindowController(self)
-        canvas = Canvas(self.controller, 1280, 720)
-        self.setStatusBar(StatusBar(self.controller))
-        self.setMenuBar(MenuBar(self.controller))
-        self.setCentralWidget(canvas)
+        self.setStatusBar(self.status_bar)
+        self.setMenuBar(self.menu_bar)
+        self.setCentralWidget(self.canvas)
         self.show()
 
-    def resizeEvent(self, event: QEvent):
-        if gl.debug:
-            ic("MainWindow::resizeEvent", self.width(), self.height())
+    def update_canvas_pos(self, pos_x: int, pos_y: int):
+        self.status_bar.update_pos(pos_x, pos_y)
