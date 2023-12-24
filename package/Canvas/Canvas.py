@@ -4,6 +4,7 @@ from PySide6.QtCore import QLineF, QPointF, Qt
 from icecream import ic
 
 import package.globals as gl
+from package.MainWindow.ModalIntersection import ModalIntersection
 
 
 class Canvas(QLabel):
@@ -103,3 +104,5 @@ class Canvas(QLabel):
             object2 = self.drawed_objects[-2]
             if object1.intersects(object2):
                 ic("Intersects")
+                modal = ModalIntersection()
+                modal.exec()
