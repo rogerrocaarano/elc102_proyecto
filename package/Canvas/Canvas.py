@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QLabel
 from PySide6.QtGui import QPixmap, QColor, QPolygonF, QPainter
-from PySide6.QtCore import QLineF, QPointF
+from PySide6.QtCore import QLineF, QPointF, Qt
 from icecream import ic
 
 import package.globals as gl
@@ -21,11 +21,14 @@ class Canvas(QLabel):
         self.setPixmap(self.pixmap)
         self.setMouseTracking(True)
 
-    def clear(self):
+    def clean(self):
         """
-        Clear the canvas
+        Clean the canvas
         :return:
         """
+        self.clear()
+        self.drawed_objects = []
+        self.temp_drawing_object = []
         self.pixmap.fill(self.bg_color)
         self.setPixmap(self.pixmap)
 
@@ -34,7 +37,8 @@ class Canvas(QLabel):
         Redraw all objects in the canvas
         :return:
         """
-        self.clear()
+        self.pixmap.fill(self.bg_color)
+        self.setPixmap(self.pixmap)
         for obj in self.drawed_objects:
             obj.draw(self)
 
@@ -73,3 +77,24 @@ class Canvas(QLabel):
             self.window.draw_events.draw_triangle_mouseMoveEvent(self, ev)
         elif self.window.draw_events.drawing == "polygon" and self.window.draw_events.points != []:
             self.window.draw_events.draw_polygon_mouseMoveEvent(self, ev)
+
+    def keyPressEvent(self, ev):
+        # Move last object
+        if ev.key() == Qt.Key_W:
+            self.drawed_objects[-1].translate(0, -1)
+        elif ev.key() == Qt.Key_S:
+            self.drawed_objects[-1].translate(0, 1)
+        elif ev.key() == Qt.Key_A:
+            self.drawed_objects[-1].translate(-1, 0)
+        elif ev.key() == Qt.Key_D:
+            self.drawed_objects[-1].translate(1, 0)
+        # Move previous object
+        elif ev.key() == Qt.Key_Up:
+            self.drawed_objects[-2].translate(0, -1)
+        elif ev.key() == Qt.Key_Down:
+            self.drawed_objects[-2].translate(0, 1)
+        elif ev.key() == Qt.Key_Left:
+            self.drawed_objects[-2].translate(-1, 0)
+        elif ev.key() == Qt.Key_Right:
+            self.drawed_objects[-2].translate(1, 0)
+        self.redraw_objects()

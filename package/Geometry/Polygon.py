@@ -8,8 +8,11 @@ class Polygon(QPolygonF):
         for point in point_list:
             self.append(point)
 
-    def draw(self, canvas):
+    def draw(self, canvas, outline_color=None):
         painter = QPainter(canvas.pixmap)
-        painter.setPen(self.outline_color)
+        if outline_color is not None:
+            painter.setPen(outline_color)
+        else:
+            painter.setPen(self.outline_color)
         painter.drawPolygon(self)
         canvas.setPixmap(canvas.pixmap)

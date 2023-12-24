@@ -12,9 +12,9 @@ class MenuBar(QMenuBar):
         # Canvas menu
         canvas_menu = self.addMenu("Lienzo")
         # Actions
-        clear_action = QAction("Limpiar lienzo", self)
-        clear_action.triggered.connect(self.draw_events.clear_action_triggered)
-        canvas_menu.addAction(clear_action)
+        clean_action = QAction("Limpiar lienzo", self)
+        clean_action.triggered.connect(self.draw_events.clean_action_triggered)
+        canvas_menu.addAction(clean_action)
 
         change_bg_color_action = QAction("Cambiar color de fondo", self)
         change_bg_color_action.triggered.connect(self.draw_events.change_bg_color_action_triggered)

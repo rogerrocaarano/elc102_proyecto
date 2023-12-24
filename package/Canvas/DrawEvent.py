@@ -1,3 +1,4 @@
+from PySide6.QtCore import QPointF
 from PySide6.QtWidgets import QColorDialog
 from package.Geometry.Line import Line
 from package.Geometry.Polygon import Polygon
@@ -12,12 +13,12 @@ class DrawEvent:
         self.drawing = None
         self.points = []
 
-    def clear_action_triggered(self):
+    def clean_action_triggered(self):
         """
-        Triggered when the user clicks on the clear action
+        Triggered when the user clicks on the clean action
         :return:
         """
-        self.canvas.clear()
+        self.canvas.clean()
 
     def change_bg_color_action_triggered(self):
         """
@@ -70,7 +71,6 @@ class DrawEvent:
         :param ev: Event object
         :return:
         """
-        canvas.clear()
         canvas.redraw_objects()
         for obj in canvas.temp_drawing_object:
             obj.draw(canvas)
@@ -92,7 +92,6 @@ class DrawEvent:
         :param ev: Event object
         :return:
         """
-        canvas.clear()
         canvas.redraw_objects()
         size = ev.pos().x() - self.points[0].x()
         square = Square(self.points[0], size, canvas.draw_color)
@@ -130,7 +129,6 @@ class DrawEvent:
         :param ev: Event object
         :return:
         """
-        canvas.clear()
         canvas.redraw_objects()
         rectangle = Rectangle(self.points[0], ev.pos(), canvas.draw_color)
         rectangle.draw(canvas)
@@ -157,7 +155,7 @@ class DrawEvent:
         :return:
         """
         self.drawing = "triangle"
-        self.first_point = None
+        self.points = []
 
     def draw_triangle_mouseMoveEvent(self, canvas, ev):
         """

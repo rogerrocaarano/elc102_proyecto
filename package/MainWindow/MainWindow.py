@@ -26,11 +26,4 @@ class MainWindow(QMainWindow):
         self.status_bar.update_pos(pos_x, pos_y)
 
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Left:
-            pass
-        elif event.key() == Qt.Key_Right:
-            pass
-        elif event.key() == Qt.Key_Up:
-            pass
-        elif event.key() == Qt.Key_Down:
-            pass
+        self.canvas.keyPressEvent(event)
