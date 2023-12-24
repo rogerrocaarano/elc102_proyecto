@@ -1,6 +1,5 @@
 from PySide6.QtWidgets import QColorDialog
-from PySide6.QtCore import QLineF
-
+from package.Geometry.Line import Line
 from package.Geometry.Polygon import Polygon
 from package.Geometry.Rectangle import Rectangle
 from package.Geometry.Square import Square
@@ -11,7 +10,6 @@ class DrawEvent:
     def __init__(self, canvas):
         self.canvas = canvas
         self.drawing = None
-        self.first_point = None
         self.points = []
 
     def clear_action_triggered(self):
@@ -45,9 +43,9 @@ class DrawEvent:
         :return:
         """
         self.drawing = "line"
-        self.first_point = None
+        self.points = []
 
-    def draw_line_event(self, canvas, ev, polyline=False):
+    def draw_line_mousePressEvent(self, canvas, ev, polyline=False):
         """
         Triggered when the user clicks on the canvas while drawing a line
         :param polyline:
@@ -55,28 +53,29 @@ class DrawEvent:
         :param ev: Event object
         :return:
         """
-        if self.first_point is None:
-            self.first_point = ev.pos()
-        else:
-            point_b = ev.pos()
-            line = QLineF(self.first_point, point_b)
-            canvas.draw_line(line)
-            self.first_point = None
-            self.drawing = None
+        self.points.append(ev.pos())
+        if len(self.points) > 1:
+            line = Line(self.points[-2], self.points[-1], canvas.draw_color)
+            canvas.temp_drawing_object.append(line)
             if not polyline:
-                canvas.temp_drawing_object = None
+                line.draw(canvas)
+                canvas.drawed_objects.append(line)
+                self.drawing = None
+                canvas.temp_drawing_object = []
 
-    def draw_line_temp_event(self, canvas, ev):
+    def draw_line_mouseMoveEvent(self, canvas, ev):
         """
         Triggered when the user moves the mouse on the canvas while drawing a line
         :param canvas: Canvas object where the line will be drawn
         :param ev: Event object
         :return:
         """
-        if canvas.temp_drawing_object is not None:
-            canvas.clear()
-        canvas.temp_drawing_object = QLineF(self.first_point, ev.pos())
-        canvas.draw_line(canvas.temp_drawing_object)
+        canvas.clear()
+        canvas.redraw_objects()
+        for obj in canvas.temp_drawing_object:
+            obj.draw(canvas)
+        line = Line(self.points[-1], ev.pos(), canvas.draw_color)
+        line.draw(canvas)
 
     def draw_square_action_triggered(self):
         """
@@ -84,21 +83,36 @@ class DrawEvent:
         :return:
         """
         self.drawing = "square"
-        self.first_point = None
+        self.points = []
 
-    def draw_square_event(self, canvas, ev):
+    def draw_square_mouseMoveEvent(self, canvas, ev):
+        """
+        Triggered when the user moves the mouse on the canvas while drawing a square
+        :param canvas: Canvas object where the square will be drawn
+        :param ev: Event object
+        :return:
+        """
+        canvas.clear()
+        canvas.redraw_objects()
+        size = ev.pos().x() - self.points[0].x()
+        square = Square(self.points[0], size, canvas.draw_color)
+        square.draw(canvas)
+        canvas.temp_drawing_object = [square]
+
+    def draw_square_mousePressEvent(self, canvas, ev):
         """
         Triggered when the user clicks on the canvas while drawing a square
         :param canvas: Canvas object where the square will be drawn
         :param ev: Event object
         :return:
         """
-        if self.first_point is None:
-            self.first_point = ev.pos()
+        if not self.points:
+            self.points.append(ev.pos())
         else:
-            size = ev.pos().x() - self.first_point.x()
-            square = Square(self.first_point, size, canvas.draw_color)
+            size = ev.pos().x() - self.points[0].x()
+            square = Square(self.points[0], size, canvas.draw_color)
             square.draw(canvas)
+            canvas.drawed_objects.append(square)
             self.drawing = None
 
     def draw_rectangle_action_triggered(self):
@@ -107,21 +121,34 @@ class DrawEvent:
         :return:
         """
         self.drawing = "rectangle"
-        self.first_point = None
+        self.points = []
 
-    def draw_rectangle_event(self, canvas, ev):
+    def draw_rectangle_mouseMoveEvent(self, canvas, ev):
+        """
+        Triggered when the user moves the mouse on the canvas while drawing a rectangle
+        :param canvas: Canvas object where the rectangle will be drawn
+        :param ev: Event object
+        :return:
+        """
+        canvas.clear()
+        canvas.redraw_objects()
+        rectangle = Rectangle(self.points[0], ev.pos(), canvas.draw_color)
+        rectangle.draw(canvas)
+        canvas.temp_drawing_object = [rectangle]
+
+    def draw_rectangle_mousePressEvent(self, canvas, ev):
         """
         Triggered when the user clicks on the canvas while drawing a rectangle
         :param canvas: Canvas object where the rectangle will be drawn
         :param ev: Event object
         :return:
         """
-        if self.first_point is None:
-            self.first_point = ev.pos()
+        if not self.points:
+            self.points.append(ev.pos())
         else:
-            bottom_right = ev.pos()
-            rectangle = Rectangle(self.first_point, bottom_right, canvas.draw_color)
+            rectangle = Rectangle(self.points[0], ev.pos(), canvas.draw_color)
             rectangle.draw(canvas)
+            canvas.drawed_objects.append(rectangle)
             self.drawing = None
 
     def draw_triangle_action_triggered(self):
@@ -132,22 +159,28 @@ class DrawEvent:
         self.drawing = "triangle"
         self.first_point = None
 
-    def draw_triangle_event(self, canvas, ev):
+    def draw_triangle_mouseMoveEvent(self, canvas, ev):
+        """
+        Triggered when the user moves the mouse on the canvas while drawing a triangle
+        :param canvas: Canvas object where the triangle will be drawn
+        :param ev: Event object
+        :return:
+        """
+        self.draw_line_mouseMoveEvent(canvas, ev)
+
+    def draw_triangle_mousePressEvent(self, canvas, ev):
         """
         Triggered when the user clicks on the canvas while drawing a triangle
         :param canvas: Canvas object where the triangle will be drawn
         :param ev: Event object
         :return:
         """
-        if not self.points:
-            self.points.append(ev.pos())
-        elif len(self.points) < 2:
-            self.points.append(ev.pos())
-        else:
-            triangle = Triangle(self.points[0], self.points[1], ev.pos(), canvas.draw_color)
+        self.draw_line_mousePressEvent(canvas, ev, True)
+        if len(self.points) == 3:
+            triangle = Triangle(self.points[0], self.points[1], self.points[2], canvas.draw_color)
             triangle.draw(canvas)
+            canvas.drawed_objects.append(triangle)
             self.drawing = None
-            self.points = []
 
     def draw_polygon_action_triggered(self):
         """
@@ -155,9 +188,18 @@ class DrawEvent:
         :return:
         """
         self.drawing = "polygon"
-        self.first_point = None
+        self.points = []
 
-    def draw_polygon_event(self, canvas, ev, close_signal=False):
+    def draw_polygon_mouseMoveEvent(self, canvas, ev):
+        """
+        Triggered when the user moves the mouse on the canvas while drawing a polygon
+        :param canvas: Canvas object where the polygon will be drawn
+        :param ev: Event object
+        :return:
+        """
+        self.draw_line_mouseMoveEvent(canvas, ev)
+
+    def draw_polygon_mousePressEvent(self, canvas, ev, close_signal=False):
         """
         Triggered when the user clicks on the canvas while drawing a polygon
         :param canvas: Canvas object where the polygon will be drawn
@@ -165,11 +207,15 @@ class DrawEvent:
         :param close_signal: If True, the polygon will be closed
         :return:
         """
-        if close_signal and len(self.points) > 2:
+        if close_signal and len(self.points) > 4:
+            self.points.pop(-1)
+            canvas.temp_drawing_object = []
+            canvas.redraw_objects()
             self.points.append(self.points[0])
             polygon = Polygon(self.points)
             polygon.draw(canvas)
+            canvas.drawed_objects.append(polygon)
             self.drawing = None
             self.points = []
         else:
-            self.points.append(ev.pos())
+            self.draw_line_mousePressEvent(canvas, ev, True)

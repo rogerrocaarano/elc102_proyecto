@@ -13,7 +13,7 @@ class Canvas(QLabel):
         self.window = window
         self.pixmap = QPixmap(width, height)
         self.drawed_objects = []
-        self.temp_drawing_object = None
+        self.temp_drawing_object = []
         self.bg_color = color
         self.draw_color = QColor("white")
 
@@ -30,32 +30,46 @@ class Canvas(QLabel):
         self.setPixmap(self.pixmap)
 
     def redraw_objects(self):
-        pass
+        """
+        Redraw all objects in the canvas
+        :return:
+        """
+        self.clear()
+        for obj in self.drawed_objects:
+            obj.draw(self)
 
     def mousePressEvent(self, ev):
         if gl.debug:
             ic("Canvas::mousePressEvent", ev.pos())
         if self.window.draw_events.drawing == "line":
-            self.window.draw_events.draw_line_event(self, ev)
+            self.window.draw_events.draw_line_mousePressEvent(self, ev)
         elif self.window.draw_events.drawing == "square":
-            self.window.draw_events.draw_square_event(self, ev)
+            self.window.draw_events.draw_square_mousePressEvent(self, ev)
         elif self.window.draw_events.drawing == "rectangle":
-            self.window.draw_events.draw_rectangle_event(self, ev)
+            self.window.draw_events.draw_rectangle_mousePressEvent(self, ev)
         elif self.window.draw_events.drawing == "triangle":
-            self.window.draw_events.draw_triangle_event(self, ev)
+            self.window.draw_events.draw_triangle_mousePressEvent(self, ev)
         elif self.window.draw_events.drawing == "polygon":
-            self.window.draw_events.draw_polygon_event(self, ev)
+            self.window.draw_events.draw_polygon_mousePressEvent(self, ev)
 
     def contextMenuEvent(self, ev):
         if gl.debug:
             ic("Canvas::contextMenuEvent", ev.pos())
         if self.window.draw_events.drawing == "polygon":
-            self.window.draw_events.draw_polygon_event(self, ev, True)
+            self.window.draw_events.draw_polygon_mousePressEvent(self, ev, True)
 
     def mouseMoveEvent(self, ev):
         if gl.debug:
             ic("Canvas::mouseMoveEvent", ev.pos())
         pos = ev.pos()
         self.window.update_canvas_pos(pos.x(), pos.y())
-        if self.window.draw_events.drawing == "line" and self.window.draw_events.first_point is not None:
-            self.window.draw_events.draw_line_temp_event(self, ev)
+        if self.window.draw_events.drawing == "line" and self.window.draw_events.points != []:
+            self.window.draw_events.draw_line_mouseMoveEvent(self, ev)
+        elif self.window.draw_events.drawing == "square" and self.window.draw_events.points != []:
+            self.window.draw_events.draw_square_mouseMoveEvent(self, ev)
+        elif self.window.draw_events.drawing == "rectangle" and self.window.draw_events.points != []:
+            self.window.draw_events.draw_rectangle_mouseMoveEvent(self, ev)
+        elif self.window.draw_events.drawing == "triangle" and self.window.draw_events.points != []:
+            self.window.draw_events.draw_triangle_mouseMoveEvent(self, ev)
+        elif self.window.draw_events.drawing == "polygon" and self.window.draw_events.points != []:
+            self.window.draw_events.draw_polygon_mouseMoveEvent(self, ev)
