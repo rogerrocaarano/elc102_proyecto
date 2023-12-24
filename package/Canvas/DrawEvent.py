@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QColorDialog
+from PySide6.QtCore import QLineF
 
 from package.Geometry.Polygon import Polygon
 from package.Geometry.Rectangle import Rectangle
@@ -10,7 +11,7 @@ class DrawEvent:
     def __init__(self, canvas):
         self.canvas = canvas
         self.drawing = None
-        self.initial_point = None
+        self.first_point = None
         self.points = []
 
     def clear_action_triggered(self):
@@ -44,21 +45,38 @@ class DrawEvent:
         :return:
         """
         self.drawing = "line"
-        self.initial_point = None
+        self.first_point = None
 
-    def draw_line_event(self, canvas, ev):
+    def draw_line_event(self, canvas, ev, polyline=False):
         """
         Triggered when the user clicks on the canvas while drawing a line
+        :param polyline:
         :param canvas: Canvas object where the line will be drawn
         :param ev: Event object
         :return:
         """
-        if self.initial_point is None:
-            self.initial_point = ev.pos()
+        if self.first_point is None:
+            self.first_point = ev.pos()
         else:
             point_b = ev.pos()
-            canvas.draw_line(self.initial_point, point_b)
+            line = QLineF(self.first_point, point_b)
+            canvas.draw_line(line)
+            self.first_point = None
             self.drawing = None
+            if not polyline:
+                canvas.temp_drawing_object = None
+
+    def draw_line_temp_event(self, canvas, ev):
+        """
+        Triggered when the user moves the mouse on the canvas while drawing a line
+        :param canvas: Canvas object where the line will be drawn
+        :param ev: Event object
+        :return:
+        """
+        if canvas.temp_drawing_object is not None:
+            canvas.clear()
+        canvas.temp_drawing_object = QLineF(self.first_point, ev.pos())
+        canvas.draw_line(canvas.temp_drawing_object)
 
     def draw_square_action_triggered(self):
         """
@@ -66,7 +84,7 @@ class DrawEvent:
         :return:
         """
         self.drawing = "square"
-        self.initial_point = None
+        self.first_point = None
 
     def draw_square_event(self, canvas, ev):
         """
@@ -75,12 +93,12 @@ class DrawEvent:
         :param ev: Event object
         :return:
         """
-        if self.initial_point is None:
-            self.initial_point = ev.pos()
+        if self.first_point is None:
+            self.first_point = ev.pos()
         else:
-            size = ev.pos().x() - self.initial_point.x()
-            square = Square(self.initial_point, size)
-            canvas.draw_polygon(square)
+            size = ev.pos().x() - self.first_point.x()
+            square = Square(self.first_point, size, canvas.draw_color)
+            square.draw(canvas)
             self.drawing = None
 
     def draw_rectangle_action_triggered(self):
@@ -89,7 +107,7 @@ class DrawEvent:
         :return:
         """
         self.drawing = "rectangle"
-        self.initial_point = None
+        self.first_point = None
 
     def draw_rectangle_event(self, canvas, ev):
         """
@@ -98,12 +116,12 @@ class DrawEvent:
         :param ev: Event object
         :return:
         """
-        if self.initial_point is None:
-            self.initial_point = ev.pos()
+        if self.first_point is None:
+            self.first_point = ev.pos()
         else:
             bottom_right = ev.pos()
-            rectangle = Rectangle(self.initial_point, bottom_right)
-            canvas.draw_polygon(rectangle)
+            rectangle = Rectangle(self.first_point, bottom_right, canvas.draw_color)
+            rectangle.draw(canvas)
             self.drawing = None
 
     def draw_triangle_action_triggered(self):
@@ -112,7 +130,7 @@ class DrawEvent:
         :return:
         """
         self.drawing = "triangle"
-        self.initial_point = None
+        self.first_point = None
 
     def draw_triangle_event(self, canvas, ev):
         """
@@ -126,8 +144,8 @@ class DrawEvent:
         elif len(self.points) < 2:
             self.points.append(ev.pos())
         else:
-            triangle = Triangle(self.points[0], self.points[1], ev.pos())
-            canvas.draw_polygon(triangle)
+            triangle = Triangle(self.points[0], self.points[1], ev.pos(), canvas.draw_color)
+            triangle.draw(canvas)
             self.drawing = None
             self.points = []
 
@@ -137,7 +155,7 @@ class DrawEvent:
         :return:
         """
         self.drawing = "polygon"
-        self.initial_point = None
+        self.first_point = None
 
     def draw_polygon_event(self, canvas, ev, close_signal=False):
         """
@@ -150,7 +168,7 @@ class DrawEvent:
         if close_signal and len(self.points) > 2:
             self.points.append(self.points[0])
             polygon = Polygon(self.points)
-            canvas.draw_polygon(polygon)
+            polygon.draw(canvas)
             self.drawing = None
             self.points = []
         else:

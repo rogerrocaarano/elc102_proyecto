@@ -13,6 +13,7 @@ class Canvas(QLabel):
         self.window = window
         self.pixmap = QPixmap(width, height)
         self.drawed_objects = []
+        self.temp_drawing_object = None
         self.bg_color = color
         self.draw_color = QColor("white")
 
@@ -25,34 +26,11 @@ class Canvas(QLabel):
         Clear the canvas
         :return:
         """
-        self.pixmap.fill(QColor("black"))
+        self.pixmap.fill(self.bg_color)
         self.setPixmap(self.pixmap)
 
-    def draw_polygon(self, polygon: QPolygonF):
-        """
-        Draw a polygon on the canvas
-        :param polygon: Polygon to be drawn
-        :param color: Color of the polygon
-        :return:
-        """
-        painter = QPainter(self.pixmap)
-        painter.setPen(self.draw_color)
-        painter.drawPolygon(polygon)
-        self.setPixmap(self.pixmap)
-
-    def draw_line(self, point_a: QPointF, point_b: QPointF):
-        """
-        Draw a line on the canvas
-        :param point_a: Point A
-        :param point_b: Point B
-        :param color: Color of the line
-        :return:
-        """
-        line = QLineF(point_a, point_b)
-        painter = QPainter(self.pixmap)
-        painter.setPen(self.draw_color)
-        painter.drawLine(line)
-        self.setPixmap(self.pixmap)
+    def redraw_objects(self):
+        pass
 
     def mousePressEvent(self, ev):
         if gl.debug:
@@ -79,3 +57,5 @@ class Canvas(QLabel):
             ic("Canvas::mouseMoveEvent", ev.pos())
         pos = ev.pos()
         self.window.update_canvas_pos(pos.x(), pos.y())
+        if self.window.draw_events.drawing == "line" and self.window.draw_events.first_point is not None:
+            self.window.draw_events.draw_line_temp_event(self, ev)

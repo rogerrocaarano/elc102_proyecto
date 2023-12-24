@@ -1,3 +1,4 @@
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMainWindow
 
 from package.Canvas.Canvas import Canvas
@@ -23,3 +24,13 @@ class MainWindow(QMainWindow):
 
     def update_canvas_pos(self, pos_x: int, pos_y: int):
         self.status_bar.update_pos(pos_x, pos_y)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Left:
+            pass
+        elif event.key() == Qt.Key_Right:
+            pass
+        elif event.key() == Qt.Key_Up:
+            pass
+        elif event.key() == Qt.Key_Down:
+            pass
