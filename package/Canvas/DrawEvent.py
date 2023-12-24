@@ -28,6 +28,7 @@ class DrawEvent:
         color = QColorDialog.getColor()
         if color.isValid():
             self.canvas.bg_color = color
+            self.canvas.redraw_objects()
 
     def change_brush_color_action_triggered(self):
         """
