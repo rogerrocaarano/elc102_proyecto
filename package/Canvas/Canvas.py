@@ -98,3 +98,8 @@ class Canvas(QLabel):
         elif ev.key() == Qt.Key_Right:
             self.drawed_objects[-2].translate(1, 0)
         self.redraw_objects()
+        if len(self.drawed_objects) > 1:
+            object1 = self.drawed_objects[-1]
+            object2 = self.drawed_objects[-2]
+            if object1.intersects(object2):
+                ic("Intersects")
