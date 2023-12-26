@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QMainWindow, QMenuBar
 
 from package.Canvas.Canvas import Canvas
 from package.Interface.StatusBar import StatusBar
+from package.OpenGlWindow.OpenglWindow import OpenglWindow
 
 
 class MainWindow(QMainWindow):
@@ -11,14 +12,14 @@ class MainWindow(QMainWindow):
         self.canvas = Canvas(self, 1024, 768)
         self.menu_bar = QMenuBar(self)
         self.status_bar = StatusBar()
+        self.opengl_window = None
 
         # Create window
         self.setWindowTitle("Proyecto ELC102")
         self.setStatusBar(self.status_bar)
         self.setMenuBar(self.menu_bar)
         self.setCentralWidget(self.canvas)
-        self.add_canvas_menu()
-        self.add_draw_menu()
+        self.add_menu()
 
         # Impedir que la ventana sea redimensionada
         self.setFixedSize(self.sizeHint())
@@ -42,10 +43,18 @@ class MainWindow(QMainWindow):
         window_geometry.moveCenter(screen_geometry.center())
         self.move(window_geometry.topLeft())
 
-    def add_canvas_menu(self):
+    def add_menu(self):
         canvas_menu = self.menu_bar.addMenu("Lienzo")
         self.canvas.add_canvas_actions(self.menu_bar, canvas_menu)
-
-    def add_draw_menu(self):
         draw_menu = self.menu_bar.addMenu("Dibujar")
         self.canvas.add_draw_actions(self.menu_bar, draw_menu)
+        opengl_menu_action = self.menu_bar.addAction("3D Viewer")
+        opengl_menu_action.triggered.connect(self.open_opengl_window)
+
+    def open_opengl_window(self):
+        opengl_window = OpenglWindow()
+        opengl_window.setFixedSize(800, 600)
+        opengl_window.center_on_screen()
+        self.opengl_window = opengl_window
+        self.opengl_window.show()
+

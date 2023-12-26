@@ -31,6 +31,24 @@ class Canvas(QLabel):
         self.setPixmap(self.pixmap)
         self.setMouseTracking(True)
 
+    def add_canvas_actions(self, menu_bar: QMenuBar, menu: QMenu):
+        """
+        Add canvas actions to the menu bar
+        :param menu_bar:
+        :param menu:
+        :return:
+        """
+        MenuAction("Limpiar lienzo", menu_bar, menu, self.clean_action_triggered)
+        MenuAction("Cambiar color de fondo", menu_bar, menu, self.change_bg_color_action_triggered)
+        MenuAction("Cambiar color del pincel", menu_bar, menu, self.change_brush_color_action_triggered)
+
+    def add_draw_actions(self, menu_bar: QMenuBar, menu: QMenu):
+        MenuAction("Línea", menu_bar, menu, self.draw_line_action_triggered)
+        MenuAction("Cuadrado", menu_bar, menu, self.draw_square_action_triggered)
+        MenuAction("Rectángulo", menu_bar, menu, self.draw_rectangle_action_triggered)
+        MenuAction("Triángulo", menu_bar, menu, self.draw_triangle_action_triggered)
+        MenuAction("Polígono", menu_bar, menu, self.draw_polygon_action_triggered)
+
     def clean(self):
         """
         Clean the canvas
@@ -115,18 +133,6 @@ class Canvas(QLabel):
                 ic("Intersects")
                 modal = ModalIntersection()
                 modal.exec()
-
-    def add_canvas_actions(self, menu_bar: QMenuBar, menu: QMenu):
-        MenuAction("Limpiar lienzo", menu_bar, menu, self.clean_action_triggered)
-        MenuAction("Cambiar color de fondo", menu_bar, menu, self.change_bg_color_action_triggered)
-        MenuAction("Cambiar color del pincel", menu_bar, menu, self.change_brush_color_action_triggered)
-
-    def add_draw_actions(self, menu_bar: QMenuBar, menu: QMenu):
-        MenuAction("Línea", menu_bar, menu, self.draw_line_action_triggered)
-        MenuAction("Cuadrado", menu_bar, menu, self.draw_square_action_triggered)
-        MenuAction("Rectángulo", menu_bar, menu, self.draw_rectangle_action_triggered)
-        MenuAction("Triángulo", menu_bar, menu, self.draw_triangle_action_triggered)
-        MenuAction("Polígono", menu_bar, menu, self.draw_polygon_action_triggered)
 
     def clean_action_triggered(self):
         """
