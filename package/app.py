@@ -1,10 +1,10 @@
 from PySide6.QtWidgets import QApplication
 
-from package.MainWindow.MainWindow import MainWindow
+from package.Interface.MainWindow import MainWindow
 
 
 def create_ui():
     app = QApplication()
-    window = MainWindow()
+    MainWindow()
     app.exec()
 

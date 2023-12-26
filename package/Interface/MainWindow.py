@@ -1,18 +1,15 @@
 from PySide6.QtGui import QGuiApplication
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QMainWindow, QMenuBar
 
 from package.Canvas.Canvas import Canvas
-from package.Canvas.DrawEvent import DrawEvent
-from package.MainWindow.MenuBar import MenuBar
-from package.MainWindow.StatusBar import StatusBar
+from package.Interface.StatusBar import StatusBar
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.canvas = Canvas(self, 1024, 768)
-        self.draw_events = DrawEvent(self.canvas)
-        self.menu_bar = MenuBar(self.draw_events)
+        self.menu_bar = QMenuBar(self)
         self.status_bar = StatusBar()
 
         # Create window
@@ -20,6 +17,8 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.status_bar)
         self.setMenuBar(self.menu_bar)
         self.setCentralWidget(self.canvas)
+        self.add_canvas_menu()
+        self.add_draw_menu()
 
         # Impedir que la ventana sea redimensionada
         self.setFixedSize(self.sizeHint())
@@ -42,3 +41,11 @@ class MainWindow(QMainWindow):
         # Centrar la ventana en la pantalla
         window_geometry.moveCenter(screen_geometry.center())
         self.move(window_geometry.topLeft())
+
+    def add_canvas_menu(self):
+        canvas_menu = self.menu_bar.addMenu("Lienzo")
+        self.canvas.add_canvas_actions(self.menu_bar, canvas_menu)
+
+    def add_draw_menu(self):
+        draw_menu = self.menu_bar.addMenu("Dibujar")
+        self.canvas.add_draw_actions(self.menu_bar, draw_menu)

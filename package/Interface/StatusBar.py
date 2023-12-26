@@ -1,8 +1,5 @@
 from PySide6.QtWidgets import QStatusBar, QLabel
 
-from package import globals as gb
-from icecream import ic
-
 
 class StatusBar(QStatusBar):
     def __init__(self):
@@ -15,8 +12,6 @@ class StatusBar(QStatusBar):
             self.addWidget(widget)
 
     def update_pos(self, pos_x: int, pos_y: int):
-        if gb.debug:
-            ic("StatusBar::update_pos", pos_x, pos_y)
         label_x: QLabel = self.widgets["pos_x"]
         label_y: QLabel = self.widgets["pos_y"]
 
