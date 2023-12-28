@@ -1,9 +1,10 @@
 from PySide6.QtGui import QGuiApplication
-from PySide6.QtWidgets import QMainWindow, QMenuBar
+from PySide6.QtWidgets import QMainWindow, QMenuBar, QFileDialog
 
 from package.Canvas.Canvas import Canvas
+from package.Interface.MenuAction import MenuAction
 from package.Interface.StatusBar import StatusBar
-from package.OpenGlWindow.OpenglWindow import OpenglWindow
+from package.OpenglObjectViewer.OpenglWindow import OpenglWindow
 
 
 class MainWindow(QMainWindow):
@@ -43,18 +44,24 @@ class MainWindow(QMainWindow):
         window_geometry.moveCenter(screen_geometry.center())
         self.move(window_geometry.topLeft())
 
+    def open_obj_file(self):
+        # Open file dialog for selecting obj file
+        file_path = QFileDialog.getOpenFileName(
+            self,
+            "Abrir archivo",
+            "",
+            "Archivos obj (*.obj)"
+        )[0]
+
+        if file_path:
+            self.opengl_window = OpenglWindow(file_path)
+            self.opengl_window.show()
+            # self.opengl_window.viewer.paintGL()
+
     def add_menu(self):
         canvas_menu = self.menu_bar.addMenu("Lienzo")
         self.canvas.add_canvas_actions(self.menu_bar, canvas_menu)
         draw_menu = self.menu_bar.addMenu("Dibujar")
         self.canvas.add_draw_actions(self.menu_bar, draw_menu)
-        opengl_menu_action = self.menu_bar.addAction("3D Viewer")
-        opengl_menu_action.triggered.connect(self.open_opengl_window)
-
-    def open_opengl_window(self):
-        opengl_window = OpenglWindow()
-        opengl_window.setFixedSize(800, 600)
-        opengl_window.center_on_screen()
-        self.opengl_window = opengl_window
-        self.opengl_window.show()
-
+        opengl_menu = self.menu_bar.addMenu("3D Viewer")
+        MenuAction("Abrir archivo", self.menu_bar, opengl_menu, self.open_obj_file)
