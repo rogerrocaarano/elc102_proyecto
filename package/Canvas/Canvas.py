@@ -1,9 +1,8 @@
 from PySide6.QtWidgets import QLabel, QColorDialog, QMenuBar, QMenu
 from PySide6.QtGui import QPixmap, QColor
 from PySide6.QtCore import Qt
-from icecream import ic
 
-import package.globals as gl
+import package.globalargs as gl
 from package.Geometry.Line import Line
 from package.Geometry.Polygon import Polygon
 from package.Geometry.Rectangle import Rectangle
@@ -71,8 +70,6 @@ class Canvas(QLabel):
             obj.draw(self)
 
     def mousePressEvent(self, ev):
-        if gl.debug:
-            ic("Canvas::mousePressEvent", ev.pos())
         if self.drawing == "line":
             self.draw_line_mousePressEvent(ev)
         elif self.drawing == "square":
@@ -85,8 +82,6 @@ class Canvas(QLabel):
             self.draw_polygon_mousePressEvent(ev)
 
     def contextMenuEvent(self, ev):
-        if gl.debug:
-            ic("Canvas::contextMenuEvent", ev.pos())
         if self.drawing == "polygon":
             self.draw_polygon_mousePressEvent(ev, True)
 
@@ -105,8 +100,6 @@ class Canvas(QLabel):
             self.draw_polygon_mouseMoveEvent(ev)
 
     def keyPressEvent(self, ev):
-        if gl.debug:
-            ic("Canvas::keyPressEvent", ev.key())
         # Move last object
         if ev.key() == Qt.Key_W:
             self.drawed_objects[-1].translate(0, -1)
@@ -130,7 +123,6 @@ class Canvas(QLabel):
             object1 = self.drawed_objects[-1]
             object2 = self.drawed_objects[-2]
             if object1.intersects(object2):
-                ic("Intersects")
                 modal = ModalIntersection()
                 modal.exec()
 

@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QMainWindow, QMenuBar, QFileDialog
 from package.Canvas.Canvas import Canvas
 from package.Interface.MenuAction import MenuAction
 from package.Interface.StatusBar import StatusBar
-from package.OpenglObjectViewer.OpenglWindow import OpenglWindow
+from package.Interface.OpenglWindow import OpenglWindow
 
 
 class MainWindow(QMainWindow):
@@ -34,18 +34,13 @@ class MainWindow(QMainWindow):
         self.canvas.keyPressEvent(event)
 
     def center_on_screen(self):
-        # Obtener la pantalla principal
         screen = QGuiApplication.primaryScreen()
-        # Obtener la geometría de la pantalla
         screen_geometry = screen.availableGeometry()
-        # Obtener la geometría de la ventana
         window_geometry = self.frameGeometry()
-        # Centrar la ventana en la pantalla
         window_geometry.moveCenter(screen_geometry.center())
         self.move(window_geometry.topLeft())
 
     def open_obj_file(self):
-        # Open file dialog for selecting obj file
         file_path = QFileDialog.getOpenFileName(
             self,
             "Abrir archivo",
@@ -56,7 +51,6 @@ class MainWindow(QMainWindow):
         if file_path:
             self.opengl_window = OpenglWindow(file_path)
             self.opengl_window.show()
-            # self.opengl_window.viewer.paintGL()
 
     def add_menu(self):
         canvas_menu = self.menu_bar.addMenu("Lienzo")

@@ -1,6 +1,6 @@
 import sys
 import package.app as app
-import package.globals as gl
+import package.globalargs as gl
 
 if __name__ == "__main__":
     if "debug" in sys.argv:
