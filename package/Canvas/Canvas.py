@@ -314,7 +314,7 @@ class Canvas(QLabel):
             self.temp_drawing_object = []
             self.redraw_objects()
             self.points.append(self.points[0])
-            polygon = Polygon(self.points)
+            polygon = Polygon(self.points, self.draw_color)
             polygon.draw(self)
             self.drawed_objects.append(polygon)
             self.drawing = None
